@@ -39466,10 +39466,7 @@ function (_Component3) {
             _this2.props.isInCart(_this2.state.toggleCart);
 
             action.addToCart(_this2.props.item, function (state) {
-              console.log('add to cart', state);
-              action.setBalance(price, function (state) {
-                console.log('your balance now', state);
-              });
+              action.setBalance(price, function (state) {});
             });
           }
         } else {
@@ -39479,10 +39476,7 @@ function (_Component3) {
             });
 
             var price = balance + itemPrice;
-            console.log('delete from cart', state);
-            action.setBalance(price, function (state) {
-              console.log('your balance now', state);
-            });
+            action.setBalance(price, function (state) {});
           });
         }
       });
@@ -41779,8 +41773,6 @@ function (_Component) {
         return res.json();
       }).then(function (data) {
         action.setMoviesTrending(data, function (moviesTrending) {
-          console.log('success updated data', moviesTrending);
-
           if (currentPage == 1) {
             _this.props.history.push("/");
 
@@ -41838,8 +41830,6 @@ function (_Component) {
 
       var currentUrl = _queryString.default.parse(this.props.location.search);
 
-      console.log('home url', currentUrl.page);
-
       if (currentUrl.page !== undefined) {
         action.setCurrentUrl("/".concat(currentUrl.page));
         this.updateMovies(currentUrl.page, movieStateUrl.path);
@@ -41852,7 +41842,7 @@ function (_Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
       var cart = this.context.cart;
-      this.tempCart = cart; // console.log('cart' , this.tempCart)
+      this.tempCart = cart;
     } // render per movie
 
   }, {
@@ -42158,8 +42148,6 @@ function (_Component) {
       fetch(url).then(function (res) {
         return res.json();
       }).then(function (data) {
-        console.log('data results', data.results);
-
         _this.setState({
           similarMovie: data.results
         });
@@ -42189,7 +42177,6 @@ function (_Component) {
         loading: true
       });
 
-      console.log('url', _this.props.match.params.slug);
       var mID = movieId;
 
       _this.setState({
@@ -42204,8 +42191,6 @@ function (_Component) {
         _this.setState({
           movieDetails: data
         }, function () {
-          console.log(_this.state.movieDetails);
-
           _this.fetchSimilarMovie(mID);
 
           _this.setState({
@@ -42234,10 +42219,8 @@ function (_Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "redirectToReferer", function (item) {
       var title = (0, _slugify.default)(item.title, '-');
       var redirectTo = "".concat(item.id, "-").concat(title);
-      console.log('redirect to', redirectTo, _this.props);
 
-      _this.props.history.push(redirectTo); // this.fetchMovie()
-
+      _this.props.history.push(redirectTo);
     });
 
     return _this;
@@ -42253,9 +42236,8 @@ function (_Component) {
   }, {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
-      console.log('component will receive props', nextProps);
       var movieId = nextProps.match.params.movieId;
-      var path = nextProps.match.path; // this.fetchMovie(movieId , path)
+      var path = nextProps.match.path;
 
       if (nextProps.match.params.movieId == this.state.movieID) {
         return;
@@ -42626,26 +42608,15 @@ function (_Component) {
   }
 
   _createClass(Cart, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      var _this$context2 = this.context,
-          cart = _this$context2.cart,
-          toggleCart = _this$context2.toggleCart;
-
-      if (toggleCart) {
-        console.log('cart in togglecart', cart);
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
 
-      var _this$context3 = this.context,
-          toggleCart = _this$context3.toggleCart,
-          action = _this$context3.action,
-          cart = _this$context3.cart,
-          balance = _this$context3.balance;
+      var _this$context2 = this.context,
+          toggleCart = _this$context2.toggleCart,
+          action = _this$context2.action,
+          cart = _this$context2.cart,
+          balance = _this$context2.balance;
       return toggleCart && _react.default.createElement("div", {
         onClick: function onClick() {
           return action.setToggleCart(false);
@@ -42907,7 +42878,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54103" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56325" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
