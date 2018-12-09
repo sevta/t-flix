@@ -34,7 +34,6 @@ class Home extends Component {
   componentDidMount() {
     const { action , movieStateUrl } = this.context
     let currentUrl = queryString.parse(this.props.location.search)
-    console.log('home url' , currentUrl.page)
     if (currentUrl.page !== undefined) {
       action.setCurrentUrl(`/${currentUrl.page}`)
       this.updateMovies(currentUrl.page , movieStateUrl.path)
@@ -47,7 +46,6 @@ class Home extends Component {
   componentDidUpdate() {
     const { cart } = this.context
     this.tempCart = cart
-    // console.log('cart' , this.tempCart)
   }
 
   // render per movie
@@ -66,7 +64,6 @@ class Home extends Component {
     .then(res => res.json())
     .then(data => {
       action.setMoviesTrending(data , moviesTrending => {
-        console.log('success updated data' , moviesTrending)
         if (currentPage == 1) {
           this.props.history.push(`/`)   
           this.setState({ loading: false , currentPage: 1 , pageRangDisplayed: data.results.length , totalResult: data.total_pages })

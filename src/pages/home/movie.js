@@ -151,9 +151,7 @@ class MovieCart extends Component {
         } else {
           this.props.isInCart(this.state.toggleCart)
           action.addToCart(this.props.item , state => {
-            console.log('add to cart' , state)
             action.setBalance(price , state => {
-              console.log('your balance now' , state)
             })
           })
         }
@@ -161,10 +159,7 @@ class MovieCart extends Component {
         action.deleteFromCart(this.props.item , state => {
           let itemPrice = currencyFormater.unformat(calculatePrice(this.props.item.vote_average) , { code: 'IDR' })
           let price = balance + itemPrice
-          console.log('delete from cart' , state)
-          action.setBalance(price , state => {
-            console.log('your balance now' , state)
-          })
+          action.setBalance(price , state => { })
         })
       }
     })

@@ -11,14 +11,6 @@ import currencyFormater from 'currency-formatter'
 export default class Cart extends Component {
   static contextType = MovieContext
 
-  componentDidUpdate() {
-    const { cart , toggleCart } = this.context
-
-    if (toggleCart) {
-    console.log('cart in togglecart' , cart)
-    }
-  }
-
   onClickDelete = item => {
     const { action , balance } = this.context
     action.deleteFromCart(item, state => {

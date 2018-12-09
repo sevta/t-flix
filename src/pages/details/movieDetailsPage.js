@@ -30,7 +30,6 @@ export default class MovieDetailsPage extends Component {
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        console.log('data results' , data.results)
         this.setState({ similarMovie: data.results })
         if (data.results.length > 6) {
           let filtered = data.results.splice(0 , 6)   
@@ -45,8 +44,6 @@ export default class MovieDetailsPage extends Component {
   fetchMovie = (movieId , path) => {
     const { action , cart } = this.context
     this.setState({ loading: true })
-    console.log('url' , this.props.match.params.slug)
-
     let mID = movieId
     this.setState({ movieID: mID })
     let url = fetchUrl(apikey , `movie/${mID}`)
@@ -58,7 +55,6 @@ export default class MovieDetailsPage extends Component {
       .then(data => {
         
         this.setState({ movieDetails: data } , () => {
-          console.log(this.state.movieDetails)
           this.fetchSimilarMovie(mID)
           this.setState({ loading: false })
           let isInCart = cart.some(cart => cart.id == this.state.movieDetails.id)
@@ -79,10 +75,8 @@ export default class MovieDetailsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('component will receive props' , nextProps)
     let movieId = nextProps.match.params.movieId
     let path = nextProps.match.path
-    // this.fetchMovie(movieId , path)
     if (nextProps.match.params.movieId == this.state.movieID) {
       return 
     } else {
@@ -93,9 +87,7 @@ export default class MovieDetailsPage extends Component {
   redirectToReferer = item => { 
     let title = slugify(item.title , '-')
     let redirectTo = `${item.id}-${title}`
-    console.log('redirect to' , redirectTo , this.props)
     this.props.history.push(redirectTo)
-    // this.fetchMovie()
   }
 
   render() {

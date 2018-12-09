@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://sevta.github.io/t-flix",
   "scripts": {
     "start": "parcel src/index.html --no-cache --no-hmr",
+    "build": "parcel src/index.html --public-url ./",
+    "deploy": "gh-pages -b gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "currency-formatter": "^1.5.3",
+    "gh-pages": "^2.0.1",
     "query-string": "^6.2.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
