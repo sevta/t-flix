@@ -5,9 +5,14 @@ import { AppContext , MovieContext } from '../../utils/provider'
 import { FiShoppingCart } from 'react-icons/fi'
 import SimilarMovie from './similarMovie'
 import slugify from 'slugify'
+import { calculatePrice } from '../../utils/helper'
+import currencyFormater from 'currency-formatter'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import './movieDetailsPage.css'
 
 // props match
-export default class MovieDetailsPage extends Component {
+export default class MovieDetailPage extends Component {
   constructor(props) {
     super(props)
   }
@@ -20,6 +25,7 @@ export default class MovieDetailsPage extends Component {
     loading: true ,
     isInCart: false ,
     similarMovie: [] ,
+    cart: [] ,
     filteredSimilarMovie: [] ,
   }
 
@@ -47,9 +53,7 @@ export default class MovieDetailsPage extends Component {
     let mID = movieId
     this.setState({ movieID: mID })
     let url = fetchUrl(apikey , `movie/${mID}`)
-
     action.setCurrentUrl(path)
-
     fetch(url)
       .then(res => res.json())
       .then(data => {
@@ -57,7 +61,13 @@ export default class MovieDetailsPage extends Component {
         this.setState({ movieDetails: data } , () => {
           this.fetchSimilarMovie(mID)
           this.setState({ loading: false })
-          let isInCart = cart.some(cart => cart.id == this.state.movieDetails.id)
+          let cartInStorage = JSON.parse(localStorage.getItem('cart'))
+          let isInCart = cartInStorage.some(cart => cart.id == this.state.movieDetails.id)
+          console.log('is in cart' , isInCart)            
+
+          setTimeout(() => {
+            console.log('and cart is' , cart)
+          }, 1500);
           if (isInCart) {
             this.setState({ isInCart: true })
           } else {
@@ -68,9 +78,15 @@ export default class MovieDetailsPage extends Component {
       .catch(err => console.error(err))
   }
 
-  componentDidMount() {
+  isUpdate = false
+
+  componentDidMount() {    
+    const { cart , action } = this.context
+    console.log('carts' , action)
     let movieId = this.props.match.params.movieId
     let path = this.props.match.path
+    this.setState({ cart: this.context.cart } , () => console.log('cart' , this.state.cart))
+    console.log('mount' , cart)
     this.fetchMovie(movieId , path)
   }
 
@@ -88,6 +104,27 @@ export default class MovieDetailsPage extends Component {
     let title = slugify(item.title , '-')
     let redirectTo = `${item.id}-${title}`
     this.props.history.push(redirectTo)
+  }
+
+  addToCart = item => {
+    const { balance , action } = this.context
+
+    console.log('add to cart' , item)
+    if (!this.state.inCart) {
+      let itemPrice = currencyFormater.unformat(calculatePrice(item.vote_average) , { code: 'IDR' })
+      let price = balance - itemPrice
+      if (price <= 0) {
+        action.setFlashMessage(true)
+        this.setState({ isInCart: false })
+        return 
+      } else {
+        action.addToCart(item , state => {
+          action.setBalance(price)
+          this.setState({ isInCart: true })
+        })
+      }
+    }
+
   }
 
   render() {
@@ -109,7 +146,7 @@ export default class MovieDetailsPage extends Component {
               <BackDrop img={movieDetails.poster_path} /> }
             <div className="movie-details-content flex items-center justify-center flex-col">
               <div className="container mx-auto flex my-10">
-                <MovieDetailsCard details={movieDetails} inCart={isInCart} />
+                <MovieDetailsCard details={movieDetails} inCart={isInCart} addToCart={item => this.addToCart(item)} />
               </div>
               <div className="container mx-auto flex items-center justify-center mt-10">
   
@@ -139,11 +176,20 @@ class MovieDetailsCard extends Component {
       <div className="col container px-5 flex mx-auto mt-14 rounded-lg">
         <div className="col-left bg-white relative">
           { inCart && <IconInCart /> }
-          <div className="poster-container w-48 border overflow-hidden">
-            <img src={`${imgUrl}original${details.poster_path}`} alt="" className='poster'/>
+          <div className="poster-container w-48 border overflow-hidden relative">
+            <LazyLoadImage 
+              effect='blur' 
+              src={`${imgUrl}original${details.poster_path}`} 
+              style={{
+                width: '100%' ,
+                height: '100%' ,
+                objectFit: 'cover' ,
+                objectPosition: 'center'
+              }}
+            />
           </div>
         </div>
-        <div className="col-right ml-5 px-5 py-6 flex flex-col pt-0">
+        <div className="col-right ml-5 px-5 py-6 flex flex-wrap flex-col pt-0 pb-0">
           <div className="h-title text-2xl mb-4 font-sans font-bold">{details.title}</div>
           <MovieDetailsContent title='Tag' content={details.tagline} />
           <MovieDetailsContent title='Release' content={details.release_date} />
@@ -163,18 +209,21 @@ class MovieDetailsCard extends Component {
               </div>
             )) : (<h1>loading...</h1>)}
           </div>
-  
+          <h4 className='my-6'>{calculatePrice(this.props.details.vote_average)}</h4>
+          <button className='btn-add bg-purple py-2 px-5 rounded self-start text-white' disabled={inCart} onClick={() => this.props.addToCart(details)}>add cart</button>
         </div>
         <style jsx sass>{`
           .poster-container {
             width: 320px;
             height: 100%;
           }
+          .btn-add {
+            &:disabled {
+              background: grey;
+            }
+          }
           .poster {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+
           }
         `}</style>
       </div>  
@@ -185,7 +234,7 @@ class MovieDetailsCard extends Component {
 function IconInCart() {
   return (
     <div 
-      className="indicator absolute pin-t pin-l shadow -ml-3 -mt-3 w-12 h-12 rounded-full bg-purple flex items-center justify-center font-bold text-white text-xl">
+      className="indicator absolute pin-t pin-l z-50 shadow -ml-3 -mt-3 w-12 h-12 rounded-full bg-purple flex items-center justify-center font-bold text-white text-xl">
       <FiShoppingCart />
     </div>
   )

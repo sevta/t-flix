@@ -1,5 +1,6 @@
 import React , { Component } from 'react'
 import { apikey , apiUrl } from './api'
+import { rejects } from 'assert';
 
 export const UserContext = React.createContext('UserContext')
 export const MovieContext = React.createContext('MovieContext')
@@ -60,12 +61,15 @@ class MovieProvider extends Component {
   
   componentDidMount() {
     let userStorage = localStorage.getItem('user')
-
+    console.log('user storage' , userStorage)
     if (userStorage !== null) { 
+      console.log('user storage is not null')
       let currentCart = JSON.parse(localStorage.getItem('cart'))
       let currentBalance = JSON.parse(localStorage.getItem('balance'))
       // addToCart(currentCart)
-      this.setState({ cart: currentCart , balance: currentBalance })
+      this.setState({ cart: currentCart , balance: currentBalance } , () =>{
+        console.log('and this is after set state' , this.state.cart)
+      })
       setTimeout(() => {
         console.log('if user storage not null ' , JSON.parse(localStorage.getItem('cart')))
       }, 300);

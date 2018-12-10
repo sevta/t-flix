@@ -12,17 +12,19 @@ import Cart from './component/cart/cart'
 import Navbar from './component/navbar/navbar'
 
 // utils
-import { Provider , UserContext } from './utils/provider'
+import { Provider , MovieContext } from './utils/provider'
 import history from './utils/history'
 
 function Roots() {
+  const { toggleCart } = React.useContext(MovieContext)
+
   return (
-    <Provider>
+    <React.Fragment>
       <Popup show={false} />
       <Navbar />
       <HashRouter history={history} forceRefresh={true}>
         <React.Fragment>
-          <Cart />
+        { toggleCart &&  <Cart />}
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/details/:movieId-:slug' component={MovieDetailsPage} />
@@ -36,9 +38,13 @@ function Roots() {
         }
   
       `}</style>
-    </Provider>
+    </React.Fragment>
   )  
 }
 
 let app = document.querySelector('#app')
-ReactDOM.render(<Roots /> , app)
+ReactDOM.render(
+  <Provider>  
+    <Roots />
+  </Provider>
+  , app)

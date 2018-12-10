@@ -33,7 +33,7 @@ export default function Navbar() {
         <div className="logo capitalize text-5xl text-green">Tokoflix</div>
 
         <div className="right flex items-center justify-center">
-          <div className="name text-xl mr-3 capitalize font-sans">{userState.username}</div>
+          <div className="name text-xl mr-3 capitalize font-sans"></div>
           <div className="cart-icon flex items-center justify-center cursor-pointer relative" onClick={openCartMenu}>
             <FiShoppingCart />
             <span className='ml-3 cart-total flex items-center justify-center font-bold rounded-full bg-red text-white'>{cart ? cart.length : 0}</span>

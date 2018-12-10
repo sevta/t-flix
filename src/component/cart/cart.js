@@ -11,6 +11,10 @@ import currencyFormater from 'currency-formatter'
 export default class Cart extends Component {
   static contextType = MovieContext
 
+  state = {
+    totalPrice: 0
+  }
+
   onClickDelete = item => {
     const { action , balance } = this.context
     action.deleteFromCart(item, state => {
@@ -27,7 +31,7 @@ export default class Cart extends Component {
 
   render() {
     const { toggleCart , action , cart , balance } = this.context
-    return toggleCart && (
+    return (
       <div className='cart-overlay fixed pin-y pin-x bg-black z-50 flex items-center justify-center' onClick={() => action.setToggleCart(false)}>
         <div className="cart-inner bg-white p-5 relative rounded" onClick={e => e.stopPropagation()}>
           <div className="close absolute pin-r pin-t text-3xl mt-3 mr-3 cursor-pointer" onClick={() => action.setToggleCart(false)}>

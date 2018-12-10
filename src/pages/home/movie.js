@@ -8,6 +8,9 @@ import { IoMdCart } from 'react-icons/io'
 import slugify from 'slugify'
 import { calculatePrice } from '../../utils/helper'
 import currencyFormater from 'currency-formatter'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+
 // w-8 z-50 h-8 -mt-3 mr-8 rounded-full bg-teal absolute pin-t pin-r flex items-center justify-center text-white text-sm
 const SingleMovieContext = React.createContext('singlemovie')
 export default function Movie({details , onAddCart , onDeleteFromCart , onClick , tempCart}) {
@@ -30,7 +33,12 @@ export default function Movie({details , onAddCart , onDeleteFromCart , onClick 
           </div>
         )}
         <div className='movie-top w-full h-64 d relative cursor-pointer overflow-hidden rounded'> 
-          <img className='movie-poster absolute w-full h-full pin-t pin-l' src={`${imgUrl}original${details.poster_path}`} alt=""/>
+          <LazyLoadImage 
+            effect='blur' 
+            src={`${imgUrl}original${details.poster_path}`}
+          />
+          {/** <img className='movie-poster absolute w-full h-full pin-t pin-l' src={`${imgUrl}original${details.poster_path}`} alt=""/> */}
+         
           <div className="overlay absolute pin-y p-3 pin-x flex flex-col justify-end">
             <div className="menu-bottom flex justify-between">
               <div className='menu-left z-30 font-bold text-white'>

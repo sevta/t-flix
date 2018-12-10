@@ -43,6 +43,16 @@ class Home extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    // let movieId = nextProps.match.params.movieId
+    // let path = nextProps.match.path
+    // if (nextProps.match.params.movieId == this.state.movieID) {
+    //   return 
+    // } else {
+    //   this.fetchMovie(movieId , path)
+    // }
+  }
+
   componentDidUpdate() {
     const { cart } = this.context
     this.tempCart = cart
@@ -82,6 +92,7 @@ class Home extends Component {
     action.setCurrentPage(pageNumber , currentPage => {
       this.setState({ loading: true })
       this.updateMovies(currentPage , movieStateUrl.path)
+      console.log('this props after render' , this.props)
     })
   }
 
